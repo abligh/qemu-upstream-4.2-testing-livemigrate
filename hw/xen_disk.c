@@ -45,6 +45,8 @@ static int batch_maps   = 0;
 
 static int max_requests = 32;
 
+static int use_o_direct = 0;
+
 /* ------------------------------------------------------------- */
 
 #define BLOCK_SIZE  512
@@ -603,7 +605,7 @@ static int blk_init(struct XenDevice *xendev)
     }
 
     /* read-only ? */
-    qflags = BDRV_O_NOCACHE | BDRV_O_CACHE_WB | BDRV_O_NATIVE_AIO;
+    qflags = (use_o_direct?BDRV_O_NOCACHE:0) | BDRV_O_CACHE_WB | BDRV_O_NATIVE_AIO;
     if (strcmp(blkdev->mode, "w") == 0) {
         qflags |= BDRV_O_RDWR;
     } else {
